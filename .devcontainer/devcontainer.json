@@ -15,7 +15,7 @@
 	"forwardPorts": [8000],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "pip3 install --user -r requirements.txt && uvicorn main:app --host 0.0.0.0 --port 8000 --reload",
+	"postCreateCommand": "pip3 install --user -r requirements.txt",
 
 	// Configure tool-specific properties.
 	// Configure tool-specific properties.

@@ -37,7 +37,7 @@ def get_person_by_id(person_id: int):
 @app.put("/persona/{person_id}", response_model=Person)
 def update_person(person_id: int, updated_person: Person):
     for index, person in enumerate(people_db):
-        if person["id"] == person_id:
+        if person.id == person_id:
             people_db[index] = updated_person
             return updated_person
     raise HTTPException(status_code=404, detail="Persona no encontrada")
@@ -46,7 +46,7 @@ def update_person(person_id: int, updated_person: Person):
 @app.delete("/persona/{person_id}", response_model=Person)
 def delete_person(person_id: int):
     for index, person in enumerate(people_db):
-        if person["id"] == person_id:
+        if person.id == person_id:
             deleted_person = people_db.pop(index)
             return deleted_person
     raise HTTPException(status_code=404, detail="Persona no encontrada")

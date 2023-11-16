@@ -9,6 +9,7 @@ class Person(BaseModel):
     name: str
     age: int
     email: str
+    id: int
 
 # Lista para almacenar personas (simulación de base de datos)
 people_db = []
@@ -28,7 +29,7 @@ def get_all_people():
 @app.get("/persona/{person_id}", response_model=Person)
 def get_person_by_id(person_id: int):
     for person in people_db:
-        if person["id"] == person_id:
+        if person.id == person_id:
             return person
     raise HTTPException(status_code=404, detail="Persona no encontrada")
 

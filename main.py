@@ -49,5 +49,3 @@ def delete_person(person_id: int):
             deleted_person = people_db.pop(index)
             return deleted_person
     raise HTTPException(status_code=404, detail="Persona no encontrada")
-
-if __name__ == "__main__":

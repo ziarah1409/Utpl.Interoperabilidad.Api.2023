@@ -1,41 +1,53 @@
 from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from typing import List
 
 app = FastAPI()
 
-# Datos de ejemplo para personas
-personas = [
-    {"id": 1, "nombre": "Juan", "edad": 30},
-    {"id": 2, "nombre": "María", "edad": 25},
-    {"id": 3, "nombre": "Pedro", "edad": 35},
-]
+# Modelo de datos para una persona
+class Person(BaseModel):
+    name: str
+    age: int
+    email: str
 
-# Ruta para listar todas las personas
-@app.get("/personas")
-async def listar_personas():
-    return personas
+# Lista para almacenar personas (simulación de base de datos)
+people_db = []
 
-# Ruta para obtener una persona por ID
-@app.get("/personas/{persona_id}")
-async def obtener_persona(persona_id: int):
-    persona = next((p for p in personas if p["id"] == persona_id), None)
-    if persona is None:
-        raise HTTPException(status_code=404, detail="Persona no encontrada")
-    return persona
+# Operación para crear una persona
+@app.post("/people/", response_model=Person)
+def create_person(person: Person):
+    people_db.append(person)
+    return person
 
-# Ruta para eliminar una persona por ID
-@app.delete("/personas/{persona_id}")
-async def eliminar_persona(persona_id: int):
-    persona = next((p for p in personas if p["id"] == persona_id), None)
-    if persona is None:
-        raise HTTPException(status_code=404, detail="Persona no encontrada")
-    personas.remove(persona)
-    return {"message": "Persona eliminada"}
+# Operación para obtener todas las personas
+@app.get("/people/", response_model=List[Person])
+def get_all_people():
+    return people_db
 
-# Ruta para actualizar una persona por ID
-@app.put("/personas/{persona_id}")
-async def actualizar_persona(persona_id: int, nueva_informacion: dict):
-    persona = next((p for p in personas if p["id"] == persona_id), None)
-    if persona is None:
-        raise HTTPException(status_code=404, detail="Persona no encontrada")
-    persona.update(nueva_informacion)
-    return {"message": "Persona actualizada", "nueva_informacion": nueva_informacion}
+# Operación para obtener una persona por ID
+@app.get("/people/{person_id}", response_model=Person)
+def get_person_by_id(person_id: int):
+    for person in people_db:
+        if person["id"] == person_id:
+            return person
+    raise HTTPException(status_code=404, detail="Persona no encontrada")
+
+# Operación para editar una persona por ID
+@app.put("/people/{person_id}", response_model=Person)
+def update_person(person_id: int, updated_person: Person):
+    for index, person in enumerate(people_db):
+        if person["id"] == person_id:
+            people_db[index] = updated_person
+            return updated_person
+    raise HTTPException(status_code=404, detail="Persona no encontrada")
+
+# Operación para eliminar una persona por ID
+@app.delete("/people/{person_id}", response_model=Person)
+def delete_person(person_id: int):
+    for index, person in enumerate(people_db):
+        if person["id"] == person_id:
+            deleted_person = people_db.pop(index)
+            return deleted_person
+    raise HTTPException(status_code=404, detail="Persona no encontrada")
+
+if __name__ == "__main__":

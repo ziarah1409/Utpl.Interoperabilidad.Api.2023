@@ -2,7 +2,7 @@
 
 ## Autor
 
-**Nombre del Autor**
+**Felipe David Quiñonez Cuenca**
 - Correo Electrónico: [fdquinones@utpl.edu.ec](mailto:fdquinones@utpl.edu.ec)
 - GitHub: [fdquinones1986](https://github.com/fdquinones1986)
 

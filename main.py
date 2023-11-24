@@ -5,48 +5,48 @@ from typing import List
 app = FastAPI()
 
 # Modelo de datos para una persona
-class Person(BaseModel):
-    name: str
-    age: int
-    email: str
+class Cliente(BaseModel):
+    nombre: str
+    direccion: str
+    telefono: str
     id: int
 
 # Lista para almacenar personas (simulación de base de datos)
-people_db = []
+cliente_db = []
 
 # Operación para crear una persona
-@app.post("/persona/", response_model=Person)
-def create_person(person: Person):
-    people_db.append(person)
+@app.post("/cliente/", response_model=Cliente)
+def create_cliente(person: Cliente):
+    cliente_db.append(person)
     return person
 
 # Operación para obtener todas las personas
-@app.get("/persona/", response_model=List[Person])
-def get_all_people():
-    return people_db
+@app.get("/cliente/", response_model=List[Cliente])
+def get_all_cliente():
+    return cliente_db
 
 # Operación para obtener una persona por ID
-@app.get("/persona/{person_id}", response_model=Person)
-def get_person_by_id(person_id: int):
-    for person in people_db:
-        if person.id == person_id:
+@app.get("/cliente/{cliente_id}", response_model=Cliente)
+def get_cliente_by_id(cliente_id: int):
+    for person in cliente_db:
+        if person.id == cliente_id:
             return person
-    raise HTTPException(status_code=404, detail="Persona no encontrada")
+    raise HTTPException(status_code=404, detail="Cliente no encontrada")
 
 # Operación para editar una persona por ID
-@app.put("/persona/{person_id}", response_model=Person)
-def update_person(person_id: int, updated_person: Person):
-    for index, person in enumerate(people_db):
-        if person.id == person_id:
-            people_db[index] = updated_person
-            return updated_person
-    raise HTTPException(status_code=404, detail="Persona no encontrada")
+@app.put("/cliente/{cliente_id}", response_model=Cliente)
+def update_cliente(cliente_id: int, updated_cliente: Cliente):
+    for index, person in enumerate(cliente_db):
+        if person.id == cliente_id:
+            cliente_db[index] = updated_cliente
+            return updated_cliente
+    raise HTTPException(status_code=404, detail="Cliente no encontrada")
 
 # Operación para eliminar una persona por ID
-@app.delete("/persona/{person_id}", response_model=Person)
-def delete_person(person_id: int):
-    for index, person in enumerate(people_db):
-        if person.id == person_id:
-            deleted_person = people_db.pop(index)
-            return deleted_person
-    raise HTTPException(status_code=404, detail="Persona no encontrada")
+@app.delete("/cliente/{cliente_id}", response_model=Cliente)
+def delete_cliente(cliente_id: int):
+    for index, cliente in enumerate(cliente_db):
+        if cliente_id == cliente_id:
+            deleted_cliente = cliente_db.pop(index)
+            return deleted_cliente
+    raise HTTPException(status_code=404, detail="Cliente no encontrada")

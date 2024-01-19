@@ -17,8 +17,8 @@ app = FastAPI(
     },
     openapi_tags=[
         {
-            "name": "Persona",
-            "description": "Operaciones para el manejo de personas"
+            "name": "Cliente",
+            "description": "Operaciones para el manejo de Clientes"
         }
     ]
 )
@@ -34,18 +34,18 @@ class Cliente(BaseModel):
 cliente_db = []
 
 # Operación para crear una persona
-@app.post("/cliente/", response_model=Cliente)
+@app.post("/cliente/", response_model=Cliente, tags=["Cliente"])
 def create_cliente(person: Cliente):
     cliente_db.append(person)
     return person
 
 # Operación para obtener todas las personas
-@app.get("/cliente/", response_model=List[Cliente])
+@app.get("/cliente/", response_model=List[Cliente],tags=["Cliente"])
 def get_all_cliente():
     return cliente_db
 
 # Operación para obtener una persona por ID
-@app.get("/cliente/{cliente_id}", response_model=Cliente)
+@app.get("/cliente/{cliente_id}", response_model=Cliente,tags=["Cliente"])
 def get_cliente_by_id(cliente_id: int):
     for person in cliente_db:
         if person.id == cliente_id:
@@ -53,7 +53,7 @@ def get_cliente_by_id(cliente_id: int):
     raise HTTPException(status_code=404, detail="Cliente no encontrada")
 
 # Operación para editar una persona por ID
-@app.put("/cliente/{cliente_id}", response_model=Cliente)
+@app.put("/cliente/{cliente_id}", response_model=Cliente,tags=["Cliente"])
 def update_cliente(cliente_id: int, updated_cliente: Cliente):
     for index, person in enumerate(cliente_db):
         if person.id == cliente_id:
@@ -62,7 +62,7 @@ def update_cliente(cliente_id: int, updated_cliente: Cliente):
     raise HTTPException(status_code=404, detail="Cliente no encontrada")
 
 # Operación para eliminar una persona por ID
-@app.delete("/cliente/{cliente_id}", response_model=Cliente)
+@app.delete("/cliente/{cliente_id}", response_model=Cliente,tags=["Cliente"])
 def delete_cliente(cliente_id: int):
     for index, cliente in enumerate(cliente_db):
         if cliente_id == cliente_id:

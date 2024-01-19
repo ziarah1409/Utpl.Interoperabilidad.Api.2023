@@ -1,7 +1,13 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import List
+#importar librerias para el manejo de la base de datos pymongo
+import pymongo
 
+#configuracion de mongo
+cliente = pymongo.MongoClient("mongodb+srv://Ziarah12:ziarah14@cluster0.zyjdlhv.mongodb.net/?retryWrites=true&w=majority")
+database = cliente["Clientes"]
+coleccion = database["Cliente"]
 app = FastAPI(
     title="API de Clientes",
     description="API Clientes",
@@ -36,7 +42,7 @@ cliente_db = []
 # Operación para crear una persona
 @app.post("/cliente/", response_model=Cliente, tags=["Cliente"])
 def create_cliente(person: Cliente):
-    cliente_db.append(person)
+    result = coleccion.insert_one(person.dict())
     return person
 
 # Operación para obtener todas las personas

@@ -48,15 +48,17 @@ def create_cliente(person: Cliente):
 # Operación para obtener todas las personas
 @app.get("/cliente/", response_model=List[Cliente],tags=["Cliente"])
 def get_all_cliente():
-    return cliente_db
+    items = list(coleccion.find())
+    return items
 
 # Operación para obtener una persona por ID
 @app.get("/cliente/{cliente_id}", response_model=Cliente,tags=["Cliente"])
 def get_cliente_by_id(cliente_id: int):
-    for person in cliente_db:
-        if person.id == cliente_id:
-            return person
-    raise HTTPException(status_code=404, detail="Cliente no encontrada")
+    item = coleccion.find_one({"id": cliente_id})
+    if item is not None:
+        return item
+    else:
+        raise HTTPException(status_code=404, detail="Cliente no encontrado")
 
 # Operación para editar una persona por ID
 @app.put("/cliente/{cliente_id}", response_model=Cliente,tags=["Cliente"])
@@ -68,10 +70,11 @@ def update_cliente(cliente_id: int, updated_cliente: Cliente):
     raise HTTPException(status_code=404, detail="Cliente no encontrada")
 
 # Operación para eliminar una persona por ID
-@app.delete("/cliente/{cliente_id}", response_model=Cliente,tags=["Cliente"])
+@app.delete("/cliente/{cliente_id}",tags=["Cliente"])
 def delete_cliente(cliente_id: int):
-    for index, cliente in enumerate(cliente_db):
-        if cliente_id == cliente_id:
-            deleted_cliente = cliente_db.pop(index)
-            return deleted_cliente
-    raise HTTPException(status_code=404, detail="Cliente no encontrada")
+    result = coleccion.delete_one({"id": cliente_id})
+    if result.deleted_count == 1:
+        return {"mensaje": "Cliente eliminada correctamente"}
+    else:
+        raise HTTPException(status_code=404, detail="Cliente no encontrado")
+
